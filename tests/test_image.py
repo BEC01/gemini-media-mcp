@@ -430,6 +430,154 @@ async def test_generate_image_imagen(
 
 
 # ============================================================================
+# generate_image tests - Gemini 3.1 Flash Image Preview
+# ============================================================================
+
+
+@pytest.mark.asyncio
+@pytest.mark.timeout(2.0)
+async def test_generate_image_gemini31_flash(
+    tmp_path: Path,
+) -> None:
+    """Test generate_image with Gemini 3.1 Flash model."""
+    images_dir = tmp_path / "images"
+    images_dir.mkdir()
+
+    test_image_bytes = _create_test_image()
+    inline_data = FakeInlineData("image/png", test_image_bytes)
+    part = FakePart(inline_data=inline_data)
+    content = FakeContent([part])
+    candidate = FakeCandidate(content)
+    gemini_response = FakeGeminiResponse([candidate])
+
+    client = FakeGenaiClient(gemini_response=gemini_response)
+
+    result = await generate_image(
+        client=client,  # type: ignore[arg-type]
+        prompt="A red square",
+        images_dir=images_dir,
+        model="gemini-3.1-flash-image-preview",
+    )
+
+    assert result["model"] == "gemini-3.1-flash-image-preview"
+    assert result["message"] == "Image generated successfully"
+    assert "image_url" in result
+    assert result["image_url"].startswith("file://")
+
+
+@pytest.mark.asyncio
+@pytest.mark.timeout(2.0)
+async def test_generate_image_gemini31_flash_vertex_global_location(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Test generate_image with Gemini 3.1 Flash requires global location on Vertex AI."""
+    images_dir = tmp_path / "images"
+    images_dir.mkdir()
+
+    test_image_bytes = _create_test_image()
+    inline_data = FakeInlineData("image/png", test_image_bytes)
+    part = FakePart(inline_data=inline_data)
+    content = FakeContent([part])
+    candidate = FakeCandidate(content)
+    gemini_response = FakeGeminiResponse([candidate])
+
+    # Track client creation parameters
+    created_clients: list[dict[str, Any]] = []
+
+    def mock_client(**kwargs: Any) -> FakeGenaiClient:
+        created_clients.append(kwargs)
+        return FakeGenaiClient(gemini_response=gemini_response)
+
+    monkeypatch.setattr("src.image.genai.Client", mock_client)
+
+    # Initial client (will be replaced for gemini-3.1-flash-image-preview)
+    # Must set vertexai=True to trigger global location logic
+    initial_client = FakeGenaiClient(gemini_response=gemini_response, vertexai=True)
+
+    result = await generate_image(
+        client=initial_client,  # type: ignore[arg-type]
+        prompt="Test prompt",
+        images_dir=images_dir,
+        model="gemini-3.1-flash-image-preview",
+    )
+
+    # Verify a new client was created with global location
+    assert len(created_clients) == 1
+    assert created_clients[0]["vertexai"] is True
+    assert created_clients[0]["location"] == "global"
+
+    assert result["model"] == "gemini-3.1-flash-image-preview"
+    assert "image_url" in result
+
+
+@pytest.mark.asyncio
+@pytest.mark.timeout(2.0)
+async def test_generate_image_gemini31_flash_image_size(
+    tmp_path: Path,
+) -> None:
+    """Test generate_image with Gemini 3.1 Flash supports image_size parameter."""
+    images_dir = tmp_path / "images"
+    images_dir.mkdir()
+
+    test_image_bytes = _create_test_image()
+    inline_data = FakeInlineData("image/png", test_image_bytes)
+    part = FakePart(inline_data=inline_data)
+    content = FakeContent([part])
+    candidate = FakeCandidate(content)
+    gemini_response = FakeGeminiResponse([candidate])
+
+    client = FakeGenaiClient(gemini_response=gemini_response)
+
+    result = await generate_image(
+        client=client,  # type: ignore[arg-type]
+        prompt="Test prompt",
+        images_dir=images_dir,
+        model="gemini-3.1-flash-image-preview",
+        image_size="4K",
+    )
+
+    assert result["message"] == "Image generated successfully"
+    assert "image_url" in result
+
+
+@pytest.mark.asyncio
+@pytest.mark.timeout(2.0)
+async def test_generate_image_gemini31_flash_reference_images(
+    tmp_path: Path,
+) -> None:
+    """Test generate_image with Gemini 3.1 Flash supports multiple reference images."""
+    images_dir = tmp_path / "images"
+    images_dir.mkdir()
+
+    test_image_bytes = _create_test_image()
+    inline_data = FakeInlineData("image/png", test_image_bytes)
+    part = FakePart(inline_data=inline_data)
+    content = FakeContent([part])
+    candidate = FakeCandidate(content)
+    gemini_response = FakeGeminiResponse([candidate])
+
+    client = FakeGenaiClient(gemini_response=gemini_response)
+
+    reference_images = [
+        _create_test_image(color="blue"),
+        _create_test_image(color="green"),
+        _create_test_image(color="yellow"),
+    ]
+
+    result = await generate_image(
+        client=client,  # type: ignore[arg-type]
+        prompt="Combine these reference images",
+        images_dir=images_dir,
+        model="gemini-3.1-flash-image-preview",
+        reference_images=reference_images,
+    )
+
+    assert result["message"] == "Image generated successfully"
+    assert "image_url" in result
+
+
+# ============================================================================
 # generate_image tests - Gemini 3 Pro
 # ============================================================================
 

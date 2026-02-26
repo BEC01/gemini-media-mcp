@@ -87,6 +87,7 @@ Generate images using Gemini or Imagen models.
 - `model`: Model to use:
   - `gemini-2.5-flash-image` (default): Fast, creative editing
   - `gemini-3-pro-image-preview`: Highest quality, 4K resolution, multi-reference support
+  - `gemini-3.1-flash-image-preview`: Fast 3.1 model, 4K resolution, multi-reference support
   - `imagen-3.0-generate-002`: High quality, text-only input
   - `imagen-4.0-generate-001`: Balanced quality/speed
   - `imagen-4.0-ultra-generate-001`: Highest quality
@@ -94,7 +95,7 @@ Generate images using Gemini or Imagen models.
 - `image_uri`: Input image URI for image-to-image generation
 - `image_base64`: Base64 encoded input image
 
-**Gemini 3 Pro Image Parameters** (for `gemini-3-pro-image-preview` only):
+**Gemini 3.x Image Parameters** (for `gemini-3-pro-image-preview` and `gemini-3.1-flash-image-preview`):
 - `reference_image_uris`: List of up to 14 reference image URIs for multi-image composition
   - Up to 6 object images for high-fidelity inclusion
   - Up to 5 human images for character consistency across scenes
