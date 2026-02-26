@@ -15,13 +15,17 @@ from PIL import Image
 ImageModel = Literal[
     "gemini-2.5-flash-image",
     "gemini-3-pro-image-preview",
+    "gemini-3.1-flash-image-preview",
     "imagen-3.0-generate-002",
     "imagen-4.0-generate-001",
     "imagen-4.0-ultra-generate-001",
     "imagen-4.0-fast-generate-001",
 ]
 
-# Output image size options for Gemini 3 Pro Image
+# Gemini 3.x preview image models that share enhanced capabilities
+_GEMINI3_IMAGE_MODELS = {"gemini-3-pro-image-preview", "gemini-3.1-flash-image-preview"}
+
+# Output image size options for Gemini 3.x Image models
 # Must use uppercase K (1K, 2K, 4K)
 ImageSize = Literal["1K", "2K", "4K"]
 
@@ -54,7 +58,7 @@ async def generate_image(
         images_dir: Directory to save generated images
         model: Model to use for generation
         image_bytes: Input image bytes for editing
-        reference_images: List of reference image bytes (up to 14 for Gemini 3 Pro)
+        reference_images: List of reference image bytes (up to 14 for Gemini 3.x image models)
         image_size: Output image size (1K, 2K, 4K) - must use uppercase K
         media_resolution: Input image resolution processing (low/medium/high)
         thought_signature: Thought signature from previous turn for multi-turn editing
@@ -65,8 +69,8 @@ async def generate_image(
     """
     model_id = str(model)
 
-    # Gemini 3 Pro Image requires global location when using Vertex AI
-    if model == "gemini-3-pro-image-preview":
+    # Gemini 3.x preview image models require global location when using Vertex AI
+    if model in _GEMINI3_IMAGE_MODELS:
         if getattr(client._api_client, 'vertexai', False):
             # Re-create client with global location for Vertex AI
             client = genai.Client(vertexai=True, location="global")
@@ -78,9 +82,9 @@ async def generate_image(
         pil_image.load()
         pil_images.append(pil_image)
 
-    # Process reference images (up to 14 for Gemini 3 Pro)
+    # Process reference images (up to 14 for Gemini 3.x image models)
     if reference_images:
-        max_refs = 14 if model == "gemini-3-pro-image-preview" else 1
+        max_refs = 14 if model in _GEMINI3_IMAGE_MODELS else 1
         for ref_bytes in reference_images[:max_refs]:
             ref_image = Image.open(BytesIO(ref_bytes))
             ref_image.load()
@@ -122,8 +126,8 @@ async def generate_image(
                 "response_modalities": ["TEXT", "IMAGE"],
             }
 
-            # Add image_size for Gemini 3 Pro (1K, 2K, 4K)
-            if image_size and model == "gemini-3-pro-image-preview":
+            # Add image_size for Gemini 3.x image models (1K, 2K, 4K)
+            if image_size and model in _GEMINI3_IMAGE_MODELS:
                 config_kwargs["image_config"] = types.ImageConfig(
                     image_size=image_size
                 )

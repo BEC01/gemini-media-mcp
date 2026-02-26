@@ -198,16 +198,17 @@ async def generate_image(
         model: Model to use - options include:
                - "gemini-2.5-flash-image": Gemini 2.5 Flash (fast, creative editing)
                - "gemini-3-pro-image-preview": Gemini 3 Pro (highest quality, 4K, multi-reference)
+               - "gemini-3.1-flash-image-preview": Gemini 3.1 Flash (fast, 4K, multi-reference)
                - "imagen-3.0-generate-002": Imagen 3 (high quality, text-only)
                - "imagen-4.0-generate-001": Imagen 4 Standard (balanced)
                - "imagen-4.0-ultra-generate-001": Imagen 4 Ultra (highest quality)
                - "imagen-4.0-fast-generate-001": Imagen 4 Fast (fastest)
         image_uri: Input image URI (gs://, http://, file://) for image-to-image
         image_base64: Base64 encoded input image (prefer image_uri)
-        reference_image_uris: List of reference image URIs (up to 14 for Gemini 3 Pro).
+        reference_image_uris: List of reference image URIs (up to 14 for Gemini 3.x image models).
             Use up to 6 object images for high-fidelity inclusion,
             up to 5 human images for character consistency across scenes.
-        image_size: Output image size for Gemini 3 Pro (must use uppercase K):
+        image_size: Output image size for Gemini 3.x image models (must use uppercase K):
             - "1K": 1024px
             - "2K": 2048px
             - "4K": 4096px
@@ -221,7 +222,7 @@ async def generate_image(
             2. Second call: generate_image(prompt="Make it orange", thought_signature_url=<from step 1>)
 
     Returns:
-        JSON with image_url, image_preview, and model info. For Gemini 3 Pro,
+        JSON with image_url, image_preview, and model info. For Gemini 3.x image models,
         includes thought_signature_url pointing to a file with editing context.
     """
     try:
@@ -236,7 +237,7 @@ async def generate_image(
         # Fetch reference images
         reference_images: list[bytes] = []
         if reference_image_uris:
-            for ref_uri in reference_image_uris[:14]:  # Max 14 for Gemini 3 Pro
+            for ref_uri in reference_image_uris[:14]:  # Max 14 for Gemini 3.x
                 ref_bytes = await fetch(ref_uri)
                 if ref_bytes:
                     reference_images.append(ref_bytes)

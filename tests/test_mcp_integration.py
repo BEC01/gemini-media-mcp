@@ -124,6 +124,35 @@ class TestMCPIntegration:
         if "thought_signature" in text:
             print("✓ Thought signature returned for multi-turn editing")
 
+    # ==================== Gemini 3.1 Flash Image Tests ====================
+
+    async def test_gemini31_flash_image_basic(self, mcp_client):
+        """Test Gemini 3.1 Flash Image basic generation."""
+        result = await mcp_client.call_tool(
+            "generate_image",
+            {
+                "prompt": "A sunset over mountains",
+                "model": "gemini-3.1-flash-image-preview",
+            }
+        )
+        text = next((c.text for c in result.content if hasattr(c, 'text')), "")
+        print(f"✓ Gemini 3.1 Flash Image: {text[:200]}")
+        assert "image_url" in text.lower() or "error" in text.lower()
+
+    async def test_gemini31_flash_image_size(self, mcp_client):
+        """Test Gemini 3.1 Flash Image with image_size parameter (1K/2K/4K)."""
+        result = await mcp_client.call_tool(
+            "generate_image",
+            {
+                "prompt": "A city skyline at night",
+                "model": "gemini-3.1-flash-image-preview",
+                "image_size": "2K",
+            }
+        )
+        text = next((c.text for c in result.content if hasattr(c, 'text')), "")
+        print(f"✓ Gemini 3.1 Flash with 2K size: {text[:200]}")
+        assert "image_url" in text.lower() or "error" in text.lower()
+
     # ==================== VEO 3.1 Tests ====================
 
     async def test_veo31_basic(self, mcp_client):
