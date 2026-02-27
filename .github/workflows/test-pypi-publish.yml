@@ -28,3 +28,4 @@ jobs:
           # If using API Token, ensure the secret is set.
           password: ${{ secrets.TEST_PYPI_TOKEN }}
           skip-existing: true
+          verbose: true
