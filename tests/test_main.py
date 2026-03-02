@@ -819,7 +819,7 @@ async def test_generate_image(
         pytest.param(
             {
                 "prompt": "A dog running",
-                "model": "veo-3.1-generate-preview",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "9:16",
                 "duration_seconds": 8.0,
                 "include_audio": True,

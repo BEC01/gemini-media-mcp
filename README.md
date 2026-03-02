@@ -111,9 +111,9 @@ Generate videos using VEO models (requires Vertex AI).
 **Parameters:**
 - `prompt` (required): Text description of the video
 - `model`: Model to use:
-  - `veo-2.0-generate-001` (default): Stable, 5-8s duration, no audio
-  - `veo-3.1-generate-preview`: Highest quality, 4/6/8s duration, audio support
-  - `veo-3.1-fast-generate-preview`: Faster generation with audio support
+  - `veo-3.1-generate-001` (default): Highest quality, 4/6/8s duration, audio support
+  - `veo-3.1-fast-generate-001`: Faster generation with audio support
+  - `veo-2.0-generate-001`: Legacy, 5-8s duration, no audio
 - `aspect_ratio`: `16:9` (default) or `9:16`
 - `duration_seconds`: Video duration (VEO2: 5-8s, VEO3: 4/6/8s)
 - `include_audio`: Enable audio generation (VEO3 only)

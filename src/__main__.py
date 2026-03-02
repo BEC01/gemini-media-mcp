@@ -316,9 +316,9 @@ async def generate_video(
         ctx: MCP context with application state
         prompt: Text description of the video to generate
         model: Model to use - options include:
-               - "veo-2.0-generate-001": VEO 2.0 (stable, 5-8s duration, no audio)
-               - "veo-3.1-generate-preview": VEO 3.1 (highest quality, 4/6/8s, audio)
-               - "veo-3.1-fast-generate-preview": VEO 3.1 Fast (faster, 4/6/8s, audio)
+               - "veo-3.1-generate-001": VEO 3.1 (highest quality, 4/6/8s, audio)
+               - "veo-3.1-fast-generate-001": VEO 3.1 Fast (faster, 4/6/8s, audio)
+               - "veo-2.0-generate-001": VEO 2.0 (legacy, 5-8s duration, no audio)
         aspect_ratio: 16:9 (default) or 9:16
         duration_seconds: Video duration (VEO2: 5-8s, VEO3: 4/6/8s)
         include_audio: Enable audio generation (VEO3 only)

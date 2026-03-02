@@ -16,8 +16,8 @@ LogCallback = Callable[[str], Awaitable[None]]
 
 VideoModel = Literal[
     "veo-2.0-generate-001",
-    "veo-3.1-generate-preview",
-    "veo-3.1-fast-generate-preview",
+    "veo-3.1-generate-001",
+    "veo-3.1-fast-generate-001",
 ]
 
 # Generation mode for VEO 3.1
@@ -46,7 +46,7 @@ async def generate_video(
     client: genai.Client,
     prompt: str,
     videos_dir: Path,
-    model: VideoModel = "veo-2.0-generate-001",
+    model: VideoModel = "veo-3.1-generate-001",
     image_bytes: bytes | None = None,
     aspect_ratio: str = "16:9",
     duration_seconds: float = 5.0,

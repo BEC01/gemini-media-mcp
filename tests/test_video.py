@@ -282,7 +282,7 @@ async def test_generate_video_veo2(
         pytest.param(
             {
                 "prompt": "A bird flying",
-                "model": "veo-3.1-generate-preview",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 4.0,
                 "include_audio": False,
@@ -293,7 +293,7 @@ async def test_generate_video_veo2(
         pytest.param(
             {
                 "prompt": "A bird singing",
-                "model": "veo-3.1-generate-preview",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 6.0,
                 "include_audio": True,
@@ -304,7 +304,7 @@ async def test_generate_video_veo2(
         pytest.param(
             {
                 "prompt": "A crowd cheering",
-                "model": "veo-3.1-generate-preview",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 8.0,
                 "include_audio": True,
@@ -316,7 +316,7 @@ async def test_generate_video_veo2(
         pytest.param(
             {
                 "prompt": "Fast video",
-                "model": "veo-3.1-fast-generate-preview",
+                "model": "veo-3.1-fast-generate-001",
                 "aspect_ratio": "9:16",
                 "duration_seconds": 4.0,
             },
@@ -326,7 +326,7 @@ async def test_generate_video_veo2(
         pytest.param(
             {
                 "prompt": "Duration test",
-                "model": "veo-3.1-generate-preview",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 5.0,
             },
@@ -336,7 +336,7 @@ async def test_generate_video_veo2(
         pytest.param(
             {
                 "prompt": "Duration test",
-                "model": "veo-3.1-generate-preview",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 7.0,
             },
@@ -748,7 +748,7 @@ async def test_generate_video_first_last_frame(
         client=client,  # type: ignore[arg-type]
         prompt="Transition from first to last frame",
         videos_dir=videos_dir,
-        model="veo-3.1-generate-preview",
+        model="veo-3.1-generate-001",
         image_bytes=first_frame,
         last_frame_bytes=last_frame,
     )
@@ -779,7 +779,7 @@ async def test_generate_video_first_frame_only_is_image_to_video(
         client=client,  # type: ignore[arg-type]
         prompt="Animate this image",
         videos_dir=videos_dir,
-        model="veo-3.1-generate-preview",
+        model="veo-3.1-generate-001",
         image_bytes=first_frame,
     )
 
@@ -818,7 +818,7 @@ async def test_generate_video_reference_images(
         client=client,  # type: ignore[arg-type]
         prompt="Video featuring the character from references",
         videos_dir=videos_dir,
-        model="veo-3.1-generate-preview",
+        model="veo-3.1-generate-001",
         reference_images=reference_images,
     )
 
@@ -852,7 +852,7 @@ async def test_generate_video_reference_images_limited_to_3(
         client=client,  # type: ignore[arg-type]
         prompt="Video with references",
         videos_dir=videos_dir,
-        model="veo-3.1-generate-preview",
+        model="veo-3.1-generate-001",
         reference_images=reference_images,
     )
 
@@ -918,7 +918,7 @@ async def test_generate_video_extend(
         client=client,  # type: ignore[arg-type]
         prompt="Continue the action",
         videos_dir=videos_dir,
-        model="veo-3.1-generate-preview",
+        model="veo-3.1-generate-001",
         extend_video_uri="gs://bucket/original_video.mp4",
     )
 
@@ -982,7 +982,7 @@ async def test_generate_video_mode_priority_extend_wins(
         client=client,  # type: ignore[arg-type]
         prompt="Test priority",
         videos_dir=videos_dir,
-        model="veo-3.1-generate-preview",
+        model="veo-3.1-generate-001",
         image_bytes=_create_test_image(),
         last_frame_bytes=_create_test_image(),
         reference_images=[_create_test_image()],
@@ -1013,7 +1013,7 @@ async def test_generate_video_mode_priority_reference_over_frames(
         client=client,  # type: ignore[arg-type]
         prompt="Test priority",
         videos_dir=videos_dir,
-        model="veo-3.1-generate-preview",
+        model="veo-3.1-generate-001",
         image_bytes=_create_test_image(),
         reference_images=[_create_test_image()],
     )
@@ -1041,7 +1041,7 @@ async def test_generate_video_text_only_mode(
         client=client,  # type: ignore[arg-type]
         prompt="A bird flying",
         videos_dir=videos_dir,
-        model="veo-3.1-generate-preview",
+        model="veo-3.1-generate-001",
     )
 
     assert gen_result["generation_mode"] == "text_to_video"
@@ -1076,7 +1076,7 @@ async def test_generate_video_veo3_fast_with_features(
         client=client,  # type: ignore[arg-type]
         prompt="Fast transition",
         videos_dir=videos_dir,
-        model="veo-3.1-fast-generate-preview",
+        model="veo-3.1-fast-generate-001",
         image_bytes=first_frame,
         last_frame_bytes=last_frame,
         include_audio=True,
