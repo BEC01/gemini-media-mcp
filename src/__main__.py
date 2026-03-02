@@ -318,22 +318,21 @@ async def generate_video(
         model: Model to use - options include:
                - "veo-3.1-generate-001": VEO 3.1 (highest quality, 4/6/8s, audio)
                - "veo-3.1-fast-generate-001": VEO 3.1 Fast (faster, 4/6/8s, audio)
-               - "veo-2.0-generate-001": VEO 2.0 (legacy, 5-8s duration, no audio)
         aspect_ratio: 16:9 (default) or 9:16
-        duration_seconds: Video duration (VEO2: 5-8s, VEO3: 4/6/8s)
-        include_audio: Enable audio generation (VEO3 only)
-        audio_prompt: Audio description (VEO3 only)
+        duration_seconds: Video duration (4/6/8s)
+        include_audio: Enable audio generation
+        audio_prompt: Audio description
         negative_prompt: Things to avoid in the video
         seed: Random seed for reproducibility
         image_uri: First frame image URI for image-to-video
         image_base64: Base64 encoded first frame image (prefer image_uri)
-        last_frame_uri: Last frame image URI for first+last frame control (VEO3.1 only).
+        last_frame_uri: Last frame image URI for first+last frame control.
             When provided with image_uri, generates smooth transition between frames.
         last_frame_base64: Base64 encoded last frame image (prefer last_frame_uri)
-        reference_image_uris: List of up to 3 reference image URIs (VEO3.1 only).
+        reference_image_uris: List of up to 3 reference image URIs.
             Preserves appearance of a person, character, or product in the video.
             Note: Automatically uses 8-second duration. Cannot combine with first/last frame.
-        extend_video_uri: URI of existing VEO-generated video to extend (VEO3.1 only).
+        extend_video_uri: URI of existing VEO-generated video to extend.
             Extends the final second of the video and continues the action.
             Note: Cannot be used together with other image inputs.
             IMPORTANT: Video extension ALWAYS requires output_gcs_uri - extensions produce
