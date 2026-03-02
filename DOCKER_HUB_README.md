@@ -56,27 +56,25 @@ Generate videos using VEO models (requires Vertex AI authentication)
 | Parameters | Type | Description |
 |-----------|------|-------------|
 | `prompt` | string | Text description of the video to generate |
-| `model` | string *optional* | VEO model to use: `VEO2` (default), `VEO3`, `VEO3_FAST` |
+| `model` | string *optional* | VEO model to use: `veo-3.1-generate-001` (default), `veo-3.1-fast-generate-001` |
 | `aspect_ratio` | string *optional* | Video aspect ratio: `16:9` (default) or `9:16` |
-| `duration_seconds` | integer *optional* | Video duration in seconds (VEO2: 5-8s, VEO3: 4/6/8s) |
-| `include_audio` | boolean *optional* | Enable audio generation (VEO3 only) |
-| `audio_prompt` | string *optional* | Audio description (VEO3 only) |
+| `duration_seconds` | integer *optional* | Video duration in seconds (4/6/8s) |
+| `include_audio` | boolean *optional* | Enable audio generation |
+| `audio_prompt` | string *optional* | Audio description |
 | `negative_prompt` | string *optional* | Things to avoid in the video |
 | `seed` | integer *optional* | Random seed for reproducibility |
 | `image_uri` | string *optional* | Input image URI for image-to-video generation |
 
 **Available Models:**
-- `VEO2` - VEO 2 model (5-8 seconds)
-- `VEO3` - VEO 3 model (4/6/8 seconds with optional audio)
-- `VEO3_FAST` - VEO 3 Fast (faster generation)
+- `veo-3.1-generate-001` - VEO 3.1 (4/6/8 seconds with audio support)
+- `veo-3.1-fast-generate-001` - VEO 3.1 Fast (faster generation)
 
 **Supported Aspect Ratios:**
 - `16:9` - Widescreen (default)
 - `9:16` - Portrait/vertical
 
 **Duration Options:**
-- VEO2: 5-8 seconds
-- VEO3: 4, 6, or 8 seconds
+- 4, 6, or 8 seconds
 
 *This tool may perform destructive updates.*
 

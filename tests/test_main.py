@@ -809,7 +809,7 @@ async def test_generate_image(
         pytest.param(
             {
                 "prompt": "A cat walking",
-                "model": "veo-2.0-generate-001",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 5.0,
             },
@@ -819,7 +819,7 @@ async def test_generate_image(
         pytest.param(
             {
                 "prompt": "A dog running",
-                "model": "veo-3.1-generate-preview",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "9:16",
                 "duration_seconds": 8.0,
                 "include_audio": True,
@@ -831,7 +831,7 @@ async def test_generate_image(
         pytest.param(
             {
                 "prompt": "A" * 10000,
-                "model": "veo-2.0-generate-001",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 5.0,
             },
@@ -841,7 +841,7 @@ async def test_generate_image(
         pytest.param(
             {
                 "prompt": "Negative test",
-                "model": "veo-2.0-generate-001",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 5.0,
                 "negative_prompt": "blurry, distorted",
@@ -852,7 +852,7 @@ async def test_generate_image(
         pytest.param(
             {
                 "prompt": "Seeded video",
-                "model": "veo-2.0-generate-001",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 5.0,
                 "seed": 42,
@@ -863,7 +863,7 @@ async def test_generate_image(
         pytest.param(
             {
                 "prompt": "Fail video",
-                "model": "veo-2.0-generate-001",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 5.0,
                 "should_fail": True,

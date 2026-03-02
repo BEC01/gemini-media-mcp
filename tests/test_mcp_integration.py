@@ -161,7 +161,7 @@ class TestMCPIntegration:
             "generate_video",
             {
                 "prompt": "A butterfly landing on a flower",
-                "model": "veo-3.1-generate-preview",
+                "model": "veo-3.1-generate-001",
             }
         )
         text = next((c.text for c in result.content if hasattr(c, 'text')), "")
@@ -174,7 +174,7 @@ class TestMCPIntegration:
             "generate_video",
             {
                 "prompt": "Rain falling on a window",
-                "model": "veo-3.1-generate-preview",
+                "model": "veo-3.1-generate-001",
                 "duration_seconds": 6,
             }
         )
@@ -188,7 +188,7 @@ class TestMCPIntegration:
             "generate_video",
             {
                 "prompt": "A candle flame flickering",
-                "model": "veo-3.1-fast-generate-preview",
+                "model": "veo-3.1-fast-generate-001",
             }
         )
         text = next((c.text for c in result.content if hasattr(c, 'text')), "")

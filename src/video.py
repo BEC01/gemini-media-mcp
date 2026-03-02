@@ -15,9 +15,8 @@ from PIL import Image
 LogCallback = Callable[[str], Awaitable[None]]
 
 VideoModel = Literal[
-    "veo-2.0-generate-001",
-    "veo-3.1-generate-preview",
-    "veo-3.1-fast-generate-preview",
+    "veo-3.1-generate-001",
+    "veo-3.1-fast-generate-001",
 ]
 
 # Generation mode for VEO 3.1
@@ -46,7 +45,7 @@ async def generate_video(
     client: genai.Client,
     prompt: str,
     videos_dir: Path,
-    model: VideoModel = "veo-2.0-generate-001",
+    model: VideoModel = "veo-3.1-generate-001",
     image_bytes: bytes | None = None,
     aspect_ratio: str = "16:9",
     duration_seconds: float = 5.0,
@@ -69,30 +68,29 @@ async def generate_video(
         model: VEO model to use
         image_bytes: First frame image bytes for image-to-video
         aspect_ratio: Video aspect ratio (16:9 or 9:16)
-        duration_seconds: Video duration (VEO2: 5-8s, VEO3: 4/6/8s)
-        include_audio: Enable audio generation (VEO3 only)
-        audio_prompt: Audio description (VEO3 only)
+        duration_seconds: Video duration (4/6/8s)
+        include_audio: Enable audio generation
+        audio_prompt: Audio description
         negative_prompt: Things to avoid in the video
         seed: Random seed for reproducibility
         log_callback: Async callback for progress logging
-        last_frame_bytes: Last frame image bytes for first+last frame control (VEO3.1)
-        reference_images: List of reference image bytes (up to 3) for style/character (VEO3.1)
-        extend_video_uri: URI of existing VEO video to extend (VEO3.1). REQUIRES output_gcs_uri.
+        last_frame_bytes: Last frame image bytes for first+last frame control
+        reference_images: List of reference image bytes (up to 3) for style/character
+        extend_video_uri: URI of existing VEO video to extend. REQUIRES output_gcs_uri.
         output_gcs_uri: GCS URI for output (required for extensions and large videos)
 
     Returns:
         Dictionary with video_url and generation metadata
     """
     model_id = str(model)
-    is_veo3 = model_id.startswith("veo-3")
 
     # Determine generation mode based on inputs
     generation_mode: str = "text_to_video"
-    if extend_video_uri and is_veo3:
+    if extend_video_uri:
         generation_mode = "extend_video"
-    elif reference_images and is_veo3:
+    elif reference_images:
         generation_mode = "reference_to_video"
-    elif image_bytes and last_frame_bytes and is_veo3:
+    elif image_bytes and last_frame_bytes:
         generation_mode = "first_last_frame"
     elif image_bytes:
         generation_mode = "image_to_video"
@@ -126,32 +124,29 @@ async def generate_video(
         "aspect_ratio": aspect_ratio if aspect_ratio in ("16:9", "9:16") else "16:9",
     }
 
-    if is_veo3:
-        # Reference-to-video only supports 8 seconds
-        if generation_mode == "reference_to_video":
-            config_kwargs["duration_seconds"] = 8
-        # Extend video requires exactly 7 seconds output
-        elif generation_mode == "extend_video":
-            config_kwargs["duration_seconds"] = 7
-        else:
-            allowed = [4, 6, 8]
-            config_kwargs["duration_seconds"] = min(
-                allowed, key=lambda x: abs(x - duration_seconds)
-            )
-        config_kwargs["enhance_prompt"] = True
-        # generate_audio only supported in Vertex AI, not Gemini API
-        if include_audio and getattr(client._api_client, 'vertexai', False):
-            config_kwargs["generate_audio"] = include_audio
-
-        # Add last frame to config for first+last frame mode
-        if last_frame_input:
-            config_kwargs["last_frame"] = last_frame_input
-
-        # Add reference images to config for VEO 3.1
-        if reference_image_inputs:
-            config_kwargs["reference_images"] = reference_image_inputs
+    # Reference-to-video only supports 8 seconds
+    if generation_mode == "reference_to_video":
+        config_kwargs["duration_seconds"] = 8
+    # Extend video requires exactly 7 seconds output
+    elif generation_mode == "extend_video":
+        config_kwargs["duration_seconds"] = 7
     else:
-        config_kwargs["duration_seconds"] = max(5, min(8, int(duration_seconds)))
+        allowed = [4, 6, 8]
+        config_kwargs["duration_seconds"] = min(
+            allowed, key=lambda x: abs(x - duration_seconds)
+        )
+    config_kwargs["enhance_prompt"] = True
+    # generate_audio only supported in Vertex AI, not Gemini API
+    if include_audio and getattr(client._api_client, 'vertexai', False):
+        config_kwargs["generate_audio"] = include_audio
+
+    # Add last frame to config for first+last frame mode
+    if last_frame_input:
+        config_kwargs["last_frame"] = last_frame_input
+
+    # Add reference images to config for VEO 3.1
+    if reference_image_inputs:
+        config_kwargs["reference_images"] = reference_image_inputs
 
     if negative_prompt:
         config_kwargs["negative_prompt"] = negative_prompt
@@ -161,7 +156,7 @@ async def generate_video(
         config_kwargs["output_gcs_uri"] = output_gcs_uri
 
     prompt_for_api = prompt
-    if is_veo3 and audio_prompt:
+    if audio_prompt:
         prompt_for_api = f"{prompt}\nAudio: {audio_prompt}"
 
     video_config = types.GenerateVideosConfig(**config_kwargs)
@@ -240,7 +235,7 @@ async def generate_video(
         "video_url": video_url,
         "prompt": prompt_for_api,
         "model": model_id,
-        "audio_enabled": include_audio and is_veo3,
+        "audio_enabled": include_audio,
         "generation_mode": generation_mode,
     }
 

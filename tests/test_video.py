@@ -145,7 +145,7 @@ def _create_test_image(width: int = 100, height: int = 100, mode: str = "RGB") -
 
 
 # ============================================================================
-# generate_video tests - VEO 2.0
+# generate_video tests - Basic parameters
 # ============================================================================
 
 
@@ -155,7 +155,7 @@ def _create_test_image(width: int = 100, height: int = 100, mode: str = "RGB") -
         pytest.param(
             {
                 "prompt": "A cat walking",
-                "model": "veo-2.0-generate-001",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 5.0,
             },
@@ -165,7 +165,7 @@ def _create_test_image(width: int = 100, height: int = 100, mode: str = "RGB") -
         pytest.param(
             {
                 "prompt": "A dog running",
-                "model": "veo-2.0-generate-001",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "9:16",
                 "duration_seconds": 8.0,
             },
@@ -175,7 +175,7 @@ def _create_test_image(width: int = 100, height: int = 100, mode: str = "RGB") -
         pytest.param(
             {
                 "prompt": "A" * 10000,
-                "model": "veo-2.0-generate-001",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 5.0,
             },
@@ -185,7 +185,7 @@ def _create_test_image(width: int = 100, height: int = 100, mode: str = "RGB") -
         pytest.param(
             {
                 "prompt": "Unicode: 🎬 日本語 émoji",
-                "model": "veo-2.0-generate-001",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 5.0,
             },
@@ -195,7 +195,7 @@ def _create_test_image(width: int = 100, height: int = 100, mode: str = "RGB") -
         pytest.param(
             {
                 "prompt": "",
-                "model": "veo-2.0-generate-001",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 5.0,
             },
@@ -205,7 +205,7 @@ def _create_test_image(width: int = 100, height: int = 100, mode: str = "RGB") -
         pytest.param(
             {
                 "prompt": "Test negative",
-                "model": "veo-2.0-generate-001",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 5.0,
                 "negative_prompt": "blurry, distorted",
@@ -216,7 +216,7 @@ def _create_test_image(width: int = 100, height: int = 100, mode: str = "RGB") -
         pytest.param(
             {
                 "prompt": "Test seed",
-                "model": "veo-2.0-generate-001",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 5.0,
                 "seed": 42,
@@ -227,7 +227,7 @@ def _create_test_image(width: int = 100, height: int = 100, mode: str = "RGB") -
         pytest.param(
             {
                 "prompt": "Invalid aspect",
-                "model": "veo-2.0-generate-001",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "4:3",
                 "duration_seconds": 5.0,
             },
@@ -243,7 +243,7 @@ async def test_generate_video_veo2(
     expected: dict[str, Any],
     tmp_path: Path,
 ) -> None:
-    """Test generate_video with VEO 2.0 model."""
+    """Test generate_video with basic parameters."""
     videos_dir = tmp_path / "videos"
     videos_dir.mkdir()
 
@@ -282,7 +282,7 @@ async def test_generate_video_veo2(
         pytest.param(
             {
                 "prompt": "A bird flying",
-                "model": "veo-3.1-generate-preview",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 4.0,
                 "include_audio": False,
@@ -293,7 +293,7 @@ async def test_generate_video_veo2(
         pytest.param(
             {
                 "prompt": "A bird singing",
-                "model": "veo-3.1-generate-preview",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 6.0,
                 "include_audio": True,
@@ -304,7 +304,7 @@ async def test_generate_video_veo2(
         pytest.param(
             {
                 "prompt": "A crowd cheering",
-                "model": "veo-3.1-generate-preview",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 8.0,
                 "include_audio": True,
@@ -316,7 +316,7 @@ async def test_generate_video_veo2(
         pytest.param(
             {
                 "prompt": "Fast video",
-                "model": "veo-3.1-fast-generate-preview",
+                "model": "veo-3.1-fast-generate-001",
                 "aspect_ratio": "9:16",
                 "duration_seconds": 4.0,
             },
@@ -326,7 +326,7 @@ async def test_generate_video_veo2(
         pytest.param(
             {
                 "prompt": "Duration test",
-                "model": "veo-3.1-generate-preview",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 5.0,
             },
@@ -336,7 +336,7 @@ async def test_generate_video_veo2(
         pytest.param(
             {
                 "prompt": "Duration test",
-                "model": "veo-3.1-generate-preview",
+                "model": "veo-3.1-generate-001",
                 "aspect_ratio": "16:9",
                 "duration_seconds": 7.0,
             },
@@ -379,9 +379,8 @@ async def test_generate_video_veo3(
     assert gen_result["message"] == "Video generated successfully"
     assert gen_result["model"] == input["model"]
 
-    if input["model"].startswith("veo-3"):
-        expected_audio = input.get("include_audio", False)
-        assert gen_result["audio_enabled"] == expected_audio
+    expected_audio = input.get("include_audio", False)
+    assert gen_result["audio_enabled"] == expected_audio
 
 
 # ============================================================================
@@ -442,7 +441,7 @@ async def test_generate_video_with_image(
         client=client,  # type: ignore[arg-type]
         prompt="Animate this image",
         videos_dir=videos_dir,
-        model="veo-2.0-generate-001",
+        model="veo-3.1-generate-001",
         image_bytes=image_bytes,
     )
 
@@ -504,7 +503,7 @@ async def test_generate_video_output_types(
         client=client,  # type: ignore[arg-type]
         prompt="Test output",
         videos_dir=videos_dir,
-        model="veo-2.0-generate-001",
+        model="veo-3.1-generate-001",
     )
 
     assert gen_result["video_url"].startswith(expected["url_prefix"])
@@ -545,7 +544,7 @@ async def test_generate_video_polling(
         client=client,  # type: ignore[arg-type]
         prompt="Polling test",
         videos_dir=videos_dir,
-        model="veo-2.0-generate-001",
+        model="veo-3.1-generate-001",
     )
 
     assert gen_result["message"] == "Video generated successfully"
@@ -604,7 +603,7 @@ async def test_generate_video_errors(
             client=client,  # type: ignore[arg-type]
             prompt="Error test",
             videos_dir=videos_dir,
-            model="veo-2.0-generate-001",
+            model="veo-3.1-generate-001",
         )
 
 
@@ -639,7 +638,7 @@ async def test_generate_video_timeout(
             client=client,  # type: ignore[arg-type]
             prompt="Timeout test",
             videos_dir=videos_dir,
-            model="veo-2.0-generate-001",
+            model="veo-3.1-generate-001",
         )
 
 
@@ -673,7 +672,7 @@ async def test_generate_video_log_callback(
         client=client,  # type: ignore[arg-type]
         prompt="Log test",
         videos_dir=videos_dir,
-        model="veo-2.0-generate-001",
+        model="veo-3.1-generate-001",
         log_callback=log_callback,
     )
 
@@ -708,7 +707,7 @@ async def test_generate_video_creates_file(
         client=client,  # type: ignore[arg-type]
         prompt="File test",
         videos_dir=videos_dir,
-        model="veo-2.0-generate-001",
+        model="veo-3.1-generate-001",
     )
 
     video_url = gen_result["video_url"]
@@ -748,7 +747,7 @@ async def test_generate_video_first_last_frame(
         client=client,  # type: ignore[arg-type]
         prompt="Transition from first to last frame",
         videos_dir=videos_dir,
-        model="veo-3.1-generate-preview",
+        model="veo-3.1-generate-001",
         image_bytes=first_frame,
         last_frame_bytes=last_frame,
     )
@@ -779,7 +778,7 @@ async def test_generate_video_first_frame_only_is_image_to_video(
         client=client,  # type: ignore[arg-type]
         prompt="Animate this image",
         videos_dir=videos_dir,
-        model="veo-3.1-generate-preview",
+        model="veo-3.1-generate-001",
         image_bytes=first_frame,
     )
 
@@ -818,7 +817,7 @@ async def test_generate_video_reference_images(
         client=client,  # type: ignore[arg-type]
         prompt="Video featuring the character from references",
         videos_dir=videos_dir,
-        model="veo-3.1-generate-preview",
+        model="veo-3.1-generate-001",
         reference_images=reference_images,
     )
 
@@ -852,45 +851,12 @@ async def test_generate_video_reference_images_limited_to_3(
         client=client,  # type: ignore[arg-type]
         prompt="Video with references",
         videos_dir=videos_dir,
-        model="veo-3.1-generate-preview",
+        model="veo-3.1-generate-001",
         reference_images=reference_images,
     )
 
     assert gen_result["message"] == "Video generated successfully"
     assert gen_result["generation_mode"] == "reference_to_video"
-
-
-@pytest.mark.asyncio
-@pytest.mark.timeout(2.0)
-async def test_generate_video_reference_not_supported_veo2(
-    tmp_path: Path,
-) -> None:
-    """Test that reference images fall back to text_to_video for VEO 2.0."""
-    videos_dir = tmp_path / "videos"
-    videos_dir.mkdir()
-
-    reference_images = [
-        _create_test_image(width=100, height=100, mode="RGB"),
-    ]
-
-    video_obj = FakeVideoObject(video_bytes=b"fake video content")
-    gen_video = FakeGeneratedVideo(video_obj)
-    result = FakeVideoResult([gen_video])
-    operation = FakeOperation(done=True, result=result)
-
-    client = FakeGenaiClient(operation=operation)
-
-    gen_result = await generate_video(
-        client=client,  # type: ignore[arg-type]
-        prompt="Video with references",
-        videos_dir=videos_dir,
-        model="veo-2.0-generate-001",
-        reference_images=reference_images,
-    )
-
-    assert gen_result["message"] == "Video generated successfully"
-    # VEO 2.0 doesn't support reference mode, falls back to text_to_video
-    assert gen_result["generation_mode"] == "text_to_video"
 
 
 # ============================================================================
@@ -918,42 +884,13 @@ async def test_generate_video_extend(
         client=client,  # type: ignore[arg-type]
         prompt="Continue the action",
         videos_dir=videos_dir,
-        model="veo-3.1-generate-preview",
+        model="veo-3.1-generate-001",
         extend_video_uri="gs://bucket/original_video.mp4",
     )
 
     assert gen_result["message"] == "Video generated successfully"
     assert gen_result["generation_mode"] == "extend_video"
     assert gen_result["extended_from"] == "gs://bucket/original_video.mp4"
-
-
-@pytest.mark.asyncio
-@pytest.mark.timeout(2.0)
-async def test_generate_video_extend_not_supported_veo2(
-    tmp_path: Path,
-) -> None:
-    """Test that video extension falls back to text_to_video for VEO 2.0."""
-    videos_dir = tmp_path / "videos"
-    videos_dir.mkdir()
-
-    video_obj = FakeVideoObject(video_bytes=b"video content")
-    gen_video = FakeGeneratedVideo(video_obj)
-    result = FakeVideoResult([gen_video])
-    operation = FakeOperation(done=True, result=result)
-
-    client = FakeGenaiClient(operation=operation)
-
-    gen_result = await generate_video(
-        client=client,  # type: ignore[arg-type]
-        prompt="Continue the action",
-        videos_dir=videos_dir,
-        model="veo-2.0-generate-001",
-        extend_video_uri="gs://bucket/original_video.mp4",
-    )
-
-    assert gen_result["message"] == "Video generated successfully"
-    # VEO 2.0 doesn't support extend mode, falls back to text_to_video
-    assert gen_result["generation_mode"] == "text_to_video"
 
 
 # ============================================================================
@@ -982,7 +919,7 @@ async def test_generate_video_mode_priority_extend_wins(
         client=client,  # type: ignore[arg-type]
         prompt="Test priority",
         videos_dir=videos_dir,
-        model="veo-3.1-generate-preview",
+        model="veo-3.1-generate-001",
         image_bytes=_create_test_image(),
         last_frame_bytes=_create_test_image(),
         reference_images=[_create_test_image()],
@@ -1013,7 +950,7 @@ async def test_generate_video_mode_priority_reference_over_frames(
         client=client,  # type: ignore[arg-type]
         prompt="Test priority",
         videos_dir=videos_dir,
-        model="veo-3.1-generate-preview",
+        model="veo-3.1-generate-001",
         image_bytes=_create_test_image(),
         reference_images=[_create_test_image()],
     )
@@ -1041,7 +978,7 @@ async def test_generate_video_text_only_mode(
         client=client,  # type: ignore[arg-type]
         prompt="A bird flying",
         videos_dir=videos_dir,
-        model="veo-3.1-generate-preview",
+        model="veo-3.1-generate-001",
     )
 
     assert gen_result["generation_mode"] == "text_to_video"
@@ -1076,7 +1013,7 @@ async def test_generate_video_veo3_fast_with_features(
         client=client,  # type: ignore[arg-type]
         prompt="Fast transition",
         videos_dir=videos_dir,
-        model="veo-3.1-fast-generate-preview",
+        model="veo-3.1-fast-generate-001",
         image_bytes=first_frame,
         last_frame_bytes=last_frame,
         include_audio=True,
