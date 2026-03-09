@@ -1,6 +1,7 @@
 """Video generation helpers."""
 
 import asyncio
+import os
 import uuid
 from collections.abc import Awaitable, Callable
 from io import BytesIO
@@ -47,6 +48,7 @@ async def generate_video(
     videos_dir: Path,
     model: VideoModel = "veo-3.1-generate-001",
     image_bytes: bytes | None = None,
+    allowed_dir: Path | None = None,
     aspect_ratio: str = "16:9",
     duration_seconds: float = 5.0,
     include_audio: bool = False,
@@ -181,9 +183,17 @@ async def generate_video(
         # Video extension for VEO 3.1
         # For file:// URIs, load from local file to get proper mime type
         if extend_video_uri.startswith("file://"):
-            local_path = extend_video_uri[7:]  # Remove file:// prefix
+            local_path = Path(extend_video_uri[7:])
+            # Validate path is within allowed directory
+            if allowed_dir is not None:
+                resolved = local_path.resolve()
+                allowed = allowed_dir.resolve()
+                if not str(resolved).startswith(str(allowed) + os.sep) and resolved != allowed:
+                    raise ValueError(
+                        f"Access denied: '{local_path}' is outside the allowed directory."
+                    )
             api_kwargs["video"] = types.Video.from_file(
-                location=local_path, mime_type="video/mp4"
+                location=str(local_path), mime_type="video/mp4"
             )
         else:
             # Remote URI - pass with mime type
